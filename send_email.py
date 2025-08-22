@@ -8,6 +8,13 @@ import os
 import smtplib
 import ssl
 from email.mime.text import MIMEText
+import datetime
+import unicodedata
+
+def clean_string(s):
+    """Replaces all non-standard spaces with a regular space and removes leading/trailing whitespace."""
+    s = s.replace(u'\xa0', ' ') # Specifically replace non-breaking spaces
+    return ' '.join(s.split()).strip()
 
 # Get the email password from the GitHub Actions environment variable
 password = os.environ.get('EMAIL_PASSWORD')
@@ -21,9 +28,8 @@ smtp_server = "smtp.gmail.com"
 port = 587  # For starttls
 
 # Define the subject and body of the email.
-# We will use clean, plain strings. The encoding is handled by MIMEText.
-subject = 'Daily Cold Plunge Reminder for today'
-body = """
+subject_raw = f'Daily Cold Plunge Reminder for {datetime.date.today().strftime("%B %d, %Y")}'
+body_raw = """
 Hey there,
 
 DID YOU DO YOUR COLD PLUNGE?!?!?!?
@@ -32,19 +38,22 @@ Love,
 yourself
 """
 
+# Programmatically clean the strings
+subject = clean_string(subject_raw)
+body = clean_string(body_raw)
+
+print("Starting email script execution...")
+print(f"Subject: '{subject}'")
+print(f"Body (first 30 chars): '{body[:30]}...'")
+
 # Create a secure SSL context
 context = ssl.create_default_context()
 
 # Create the email message object
-# We explicitly set the charset to UTF-8 here.
 message = MIMEText(body, "plain", "utf-8")
 message["Subject"] = subject
 message["From"] = sender_email
 message["To"] = receiver_email
-
-print("Starting email script execution...")
-print(f"Subject: {subject}")
-print(f"Body: {body[:30]}...")
 
 try:
     # Connect to the SMTP server securely

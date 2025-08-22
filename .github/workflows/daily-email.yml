@@ -1,41 +1,32 @@
-name: Daily Cold Plunge Reminder
+=name: Daily Cold Plunge Reminder
 
-# This workflow will run on a schedule
 on:
   schedule:
-
-    # questions - cron syntax- how do we define schedule, how do we
-    # example of cron '0 13 * * *' is 8am est
     - cron: '0 8 * * *'
-  # This allows you to manually trigger the workflow from the Actions tab
   workflow_dispatch:
 
-# A job is a set of steps that execute on the same runner
 jobs:
   send_daily_email:
-    runs-on: ubuntu-latest #other options?
+    runs-on: ubuntu-latest
 
-  
     steps:
-      # step 1 check out repo
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # step 2 python
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      # Step 1: Set up Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
-          python-version: '3.x'
+          node-version: '18' # Use a stable Node.js version
 
-      # step 3 setup python libraries 
+      # Step 2: Install Nodemailer
       - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install yagmail
+        run: npm install nodemailer
 
-      # step 4 run py script
+      # Step 3: Run the JavaScript script
       - name: Run email script
-        run: python send_email.py
+        run: node send_email.js
         env:
-          # map gh secret to env variable in workflow 
+          EMAIL_USER: 'fvillatoro99@gmail.com'
           EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
+

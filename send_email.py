@@ -19,7 +19,8 @@ today = datetime.date.today().strftime('%B %d, %Y')
 
 # Define the subject and body of the email.
 # Ensure no invisible characters are present.
-subject = f'Daily Cold Plunge Reminder for {today}'
+#subject = f'Daily Cold Plunge Reminder for {today}'
+subject = f'Daily Cold Plunge Reminder for {today}'.encode('utf-8')
 body = """
 Hey there,
 

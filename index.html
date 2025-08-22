@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Habit Tracker</title>
+    <!-- Tailwind CSS for basic, clean styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-slate-100 min-h-screen flex items-center justify-center p-4">
+
+    <!-- Main habit tracker container -->
+    <div class="bg-white p-8 rounded-2xl shadow-xl max-w-sm w-full text-center">
+        <!-- Habit title and question -->
+        <h1 class="text-3xl font-bold mb-4 text-slate-800">Cold Plunge Tracker</h1>
+        <p class="text-xl mb-6 text-slate-600">Did you do your cold plunge today?</p>
+
+        <!-- Container for Yes/No buttons -->
+        <div class="flex space-x-4 mb-6">
+            <button id="yes-btn" class="flex-1 bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-xl transition duration-300 transform hover:scale-105">
+                Yes
+            </button>
+            <button id="no-btn" class="flex-1 bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-6 rounded-xl transition duration-300 transform hover:scale-105">
+                No
+            </button>
+        </div>
+
+        <!-- Status display area -->
+        <p id="status" class="text-base text-slate-500 font-medium">
+            <!-- This will be updated by JavaScript -->
+        </p>
+    </div>
+
+    <script>
+        // Get references to the HTML elements
+        const yesBtn = document.getElementById('yes-btn');
+        const noBtn = document.getElementById('no-btn');
+        const statusDisplay = document.getElementById('status');
+
+        // Function to update the status display
+        const updateStatus = () => {
+            // Get the stored data from localStorage
+            const lastEntry = localStorage.getItem('coldPlungeTracker');
+            if (lastEntry) {
+                // Parse the JSON string back into a JavaScript object
+                const data = JSON.parse(lastEntry);
+                const date = new Date(data.date).toLocaleDateString('en-US', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+                statusDisplay.textContent = `Last entry: ${data.response} on ${date}.`;
+            } else {
+                statusDisplay.textContent = "No entries yet.";
+            }
+        };
+
+        // Function to record a response
+        const recordResponse = (response) => {
+            // Create a new data object
+            const data = {
+                response: response,
+                date: new Date().toISOString()
+            };
+            // Convert the JavaScript object to a JSON string and save to localStorage
+            localStorage.setItem('coldPlungeTracker', JSON.stringify(data));
+            // Update the display immediately
+            updateStatus();
+        };
+
+        // Add event listeners to the buttons
+        yesBtn.addEventListener('click', () => recordResponse('Yes'));
+        noBtn.addEventListener('click', () => recordResponse('No'));
+
+        // Call the function when the page loads to show the last entry
+        document.addEventListener('DOMContentLoaded', updateStatus);
+
+    </script>
+</body>
+</html>

@@ -15,13 +15,14 @@ sender = 'fvillatoro99@gmail.com'
 recipient = 'fvillatoro99@gmail.com'
 
 # Get the current date to include in the email subject
-today = datetime.date.today().strftime('%B %d, %Y')
+#today = datetime.date.today().strftime('%B %d, %Y')
 
 # Define the subject and body of the email.
 # Ensure no invisible characters are present.
 #subject = f'Daily Cold Plunge Reminder for {today}'
-subject = f'Daily Cold Plunge Reminder for {today}'.encode('utf-8')
+#subject = f'Daily Cold Plunge Reminder for {today}'.encode('utf-8')
 
+subject = 'hello'
 # body = """
 # Hey there,
 

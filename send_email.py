@@ -1,32 +1,41 @@
+#
+# send_email.py
+# This script sends an email reminder using yagmail.
+#
+
 import yagmail
 import os
 import datetime
 
-#secret
+# Get the email password from the GitHub Actions environment variable
 password = os.environ.get('EMAIL_PASSWORD')
 
-# Set up the sender and recipient
-sender = 'fvillatoro99@gmail.com'  
-recipient = 'fvillatoro99@gmail.com' 
+# Set up the sender and recipient. Use your email address for both.
+sender = 'fvillatoro99@gmail.com'
+recipient = 'fvillatoro99@gmail.com'
 
-# Get the current date to include in the email
+# Get the current date to include in the email subject
 today = datetime.date.today().strftime('%B %d, %Y')
 
-# Define the subject and body of the email
+# Define the subject and body of the email.
+# Ensure no invisible characters are present.
 subject = f'Daily Cold Plunge Reminder for {today}'
 body = """
-test
+Hey there,
+
+DID YOU DO YOUR COLD PLUNGE?!?!?!?
+
+Love,
+yourself
 """
 
+# Try to initialize yagmail and send the email
 try:
-    # Initialize yagmail with your email and the password from the secret
     yag = yagmail.SMTP(sender, password)
-
-    # Send the email
     yag.send(to=recipient, subject=subject, contents=body)
     print("Email sent successfully!")
 
 except Exception as e:
-    # Print any errors that occur
+    # If an error occurs, print it to the GitHub Actions log
     print(f"Error sending email: {e}")
 

@@ -21,6 +21,15 @@ today = datetime.date.today().strftime('%B %d, %Y')
 # Ensure no invisible characters are present.
 #subject = f'Daily Cold Plunge Reminder for {today}'
 subject = f'Daily Cold Plunge Reminder for {today}'.encode('utf-8')
+
+# body = """
+# Hey there,
+
+# DID YOU DO YOUR COLD PLUNGE?!?!?!?
+
+# Love,
+# yourself
+# """
 body = """
 Hey there,
 
@@ -28,7 +37,7 @@ DID YOU DO YOUR COLD PLUNGE?!?!?!?
 
 Love,
 yourself
-"""
+""".encode('utf-8')
 
 # Try to initialize yagmail and send the email
 try:

@@ -9,9 +9,13 @@ import os
 import datetime
 import unicodedata
 
-# Function to remove all non-breaking spaces and other special whitespace
+# Function to remove all special characters and problematic whitespace
 def clean_string(s):
-    # This replaces all whitespace with a regular space and removes leading/trailing spaces.
+    # Normalize the string to a decomposed form (e.g., convert 'é' to 'e' + accent).
+    # Then, encode to ASCII, ignoring any characters that can't be mapped.
+    # Finally, decode back to a standard string.
+    s = unicodedata.normalize('NFKD', s).encode('ascii', 'ignore').decode('ascii')
+    # Replace all remaining whitespace with a single space and remove leading/trailing spaces.
     return ' '.join(s.split()).strip()
 
 # Get the email password from the GitHub Actions environment variable
@@ -25,6 +29,7 @@ recipient = 'fvillatoro99@gmail.com'
 today = datetime.date.today().strftime('%B %d, %Y')
 
 # Define the subject and body of the email.
+# The `today` variable is the most likely source of problematic characters.
 subject_raw = f'Daily Cold Plunge Reminder for {today}'
 body_raw = """
 Hey there,
@@ -48,4 +53,3 @@ try:
 except Exception as e:
     # If an error occurs, print it to the GitHub Actions log
     print(f"Error sending email: {e}")
-

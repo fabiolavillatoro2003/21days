@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #
 # send_email.py
 # This script sends an email reminder using yagmail.
@@ -15,22 +16,11 @@ sender = 'fvillatoro99@gmail.com'
 recipient = 'fvillatoro99@gmail.com'
 
 # Get the current date to include in the email subject
-#today = datetime.date.today().strftime('%B %d, %Y')
+today = datetime.date.today().strftime('%B %d, %Y')
 
 # Define the subject and body of the email.
-# Ensure no invisible characters are present.
-#subject = f'Daily Cold Plunge Reminder for {today}'
-#subject = f'Daily Cold Plunge Reminder for {today}'.encode('utf-8')
-
-subject = 'hello'
-# body = """
-# Hey there,
-
-# DID YOU DO YOUR COLD PLUNGE?!?!?!?
-
-# Love,
-# yourself
-# """
+# We are no longer using .encode() here.
+subject = f'Daily Cold Plunge Reminder for {today}'
 body = """
 Hey there,
 
@@ -38,7 +28,7 @@ DID YOU DO YOUR COLD PLUNGE?!?!?!?
 
 Love,
 yourself
-""".encode('utf-8')
+"""
 
 # Try to initialize yagmail and send the email
 try:
@@ -49,4 +39,3 @@ try:
 except Exception as e:
     # If an error occurs, print it to the GitHub Actions log
     print(f"Error sending email: {e}")
-

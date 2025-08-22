@@ -15,12 +15,7 @@ today = datetime.date.today().strftime('%B %d, %Y')
 # Define the subject and body of the email
 subject = f'Daily Cold Plunge Reminder for {today}'
 body = """
-Hey there,
-
-DID YOU DO YOUR COLD PLUNGE?!?!?!?
-
-Love,
-yourself
+test
 """
 
 try:

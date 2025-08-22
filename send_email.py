@@ -1,55 +1,63 @@
 # -*- coding: utf-8 -*-
 #
 # send_email.py
-# This script sends an email reminder using yagmail.
+# This script sends an email reminder using Python's standard libraries.
 #
 
-import yagmail
 import os
-import datetime
+import smtplib
+import ssl
+from email.mime.text import MIMEText
 
 # Get the email password from the GitHub Actions environment variable
 password = os.environ.get('EMAIL_PASSWORD')
 
-# Set up the sender and recipient. Use your email address for both.
-sender = 'fvillatoro99@gmail.com'
-recipient = 'fvillatoro99@gmail.com'
+# Set up the sender and recipient
+sender_email = 'fvillatoro99@gmail.com'
+receiver_email = 'fvillatoro99@gmail.com'
 
-# Get the current date to include in the email subject
-today = datetime.date.today().strftime('%B %d, %Y')
+# Define the SMTP server and port for Gmail
+smtp_server = "smtp.gmail.com"
+port = 587  # For starttls
 
-# Define the subject. This will still be plain text.
-subject = f'Daily Cold Plunge Reminder for {today}'
-
-# Define the body as an HTML string
+# Define the subject and body of the email.
+# We will use clean, plain strings. The encoding is handled by MIMEText.
+subject = 'Daily Cold Plunge Reminder for today'
 body = """
-<!DOCTYPE html>
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<style>
-  body {{ font-family: sans-serif; }}
-  h1 {{ color: #1a237e; }}
-  p {{ font-size: 16px; }}
-</style>
-</head>
-<body>
-<h1>Daily Cold Plunge Reminder!</h1>
-<p>Hey there,</p>
-<p>DID YOU DO YOUR COLD PLUNGE?!?!?!</p>
-<p>Love,<br>yourself</p>
-</body>
-</html>
+Hey there,
+
+DID YOU DO YOUR COLD PLUNGE?!?!?!?
+
+Love,
+yourself
 """
 
-# Try to initialize yagmail and send the email
+# Create a secure SSL context
+context = ssl.create_default_context()
+
+# Create the email message object
+# We explicitly set the charset to UTF-8 here.
+message = MIMEText(body, "plain", "utf-8")
+message["Subject"] = subject
+message["From"] = sender_email
+message["To"] = receiver_email
+
+print("Starting email script execution...")
+print(f"Subject: {subject}")
+print(f"Body: {body[:30]}...")
+
 try:
-    yag = yagmail.SMTP(sender, password)
-    # The 'contents' parameter can take an HTML string, which forces UTF-8 encoding.
-    yag.send(to=recipient, subject=subject, contents=body)
-    print("Email sent successfully!")
+    # Connect to the SMTP server securely
+    print("Attempting to connect to SMTP server...")
+    with smtplib.SMTP(smtp_server, port) as server:
+        server.starttls(context=context)  # Secure the connection
+        print("Connection secured. Logging in...")
+        server.login(sender_email, password)
+        print("Login successful. Sending email...")
+        server.sendmail(sender_email, receiver_email, message.as_string())
+        print("Email sent successfully!")
 
 except Exception as e:
-    # If an error occurs, print it to the GitHub Actions log
-    print(f"Error sending email: {e}")
-
+    # Print the full error for debugging
+    print(f"An error occurred!")
+    print(f"Error details: {e}")

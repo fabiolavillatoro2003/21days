@@ -1,4 +1,4 @@
-=name: Daily Cold Plunge Reminder
+name: Daily Cold Plunge Reminder
 
 on:
   schedule:
